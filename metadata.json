@@ -1,0 +1,5 @@
+{
+  "name": "TradeGuard Risk Calculator",
+  "description": "Professional Day Trading risk management calculator with real-time Finnhub market data integration.",
+  "requestFramePermissions": []
+}
