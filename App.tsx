@@ -32,6 +32,7 @@ const App: React.FC = () => {
   const [quote, setQuote] = useState<FinnhubQuote | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
   // Input States - Initialize as numbers or strings
   const [inputs, setInputs] = useState<TradeInputs>({
@@ -240,18 +241,29 @@ const App: React.FC = () => {
             <div className="bg-white dark:bg-darkCard rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 p-6">
               <h2 className="text-lg font-bold mb-4 flex items-center">
                 <Search className="w-5 h-5 mr-2 text-primary" />
-                Buscar Acción
+                Buscar Acción / Cripto
               </h2>
               <div className="flex gap-2">
-                <div className="relative flex-grow">
+                <div 
+                  className="relative flex-grow group"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                >
                   <input
                     type="text"
                     value={inputs.symbol}
                     onChange={(e) => handleInputChange(e, 'symbol')}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ej. AAPL, TSLA"
+                    placeholder="Ej. AAPL, BTC, TSLA"
                     className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none uppercase font-bold tracking-wide"
                   />
+                  {/* Name Tooltip (Cloud) */}
+                  {quote?.name && showTooltip && (
+                    <div className="absolute left-0 -top-12 bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-xl animate-fade-in whitespace-nowrap z-50 pointer-events-none transform transition-all duration-200">
+                      {quote.name}
+                      <div className="absolute left-6 bottom-0 translate-y-1/2 rotate-45 w-3 h-3 bg-gray-900"></div>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={handleFetchPrice}
@@ -270,14 +282,14 @@ const App: React.FC = () => {
               )}
 
               {quote && (
-                <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700">
-                  <div className="flex justify-between items-baseline mb-1">
+                <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 relative overflow-hidden">
+                  <div className="flex justify-between items-baseline mb-1 relative z-10">
                     <span className="text-sm text-gray-500 dark:text-gray-400">Precio Actual</span>
                     <span className="text-2xl font-bold text-gray-900 dark:text-white">
                       ${quote.c.toFixed(2)}
                     </span>
                   </div>
-                  <div className={`flex items-center text-sm font-medium ${quote.d >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <div className={`relative z-10 flex items-center text-sm font-medium ${quote.d >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {quote.d >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingUp className="w-4 h-4 mr-1 rotate-180" />}
                     {quote.d > 0 ? '+' : ''}{quote.d.toFixed(2)} ({quote.dp.toFixed(2)}%)
                   </div>

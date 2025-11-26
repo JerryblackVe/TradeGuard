@@ -8,6 +8,7 @@ export interface FinnhubQuote {
   o: number; // Open
   pc: number; // Previous close
   t: number; // Timestamp
+  name?: string; // Company or Asset Name
 }
 
 export interface TradeCalculation {
